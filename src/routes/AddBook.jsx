@@ -1,24 +1,29 @@
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Alert from '@mui/material/Alert';
-import { DateField } from '@mui/x-date-pickers/DateField';
-import useAxios from '../services/useAxios';
-import { bookGenres } from '../genres';
-import { Stack, Typography } from '@mui/material';
+import { Stack, Typography } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Rating from "@mui/material/Rating";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import { useState } from "react";
+import { bookGenres } from "../genres";
+import useAxios from "../services/useAxios";
 
+/**
+ * AddBook component handles the creation of new book entries
+ * Uses Material-UI components for form elements and layout
+ * @returns {JSX.Element} A form for adding new books
+ */
 function AddBook() {
-  const { alert, post } = useAxios('http://localhost:3001');
+  const { alert, post } = useAxios("http://localhost:3001");
   const [rateValue, setRateValue] = useState(3);
   const [book, setBook] = useState({
-    author: '',
-    name: '',
+    author: "",
+    name: "",
     genres: [],
     completed: false,
     start: null,
@@ -26,14 +31,22 @@ function AddBook() {
     stars: null,
   });
 
+  /**
+   * Handles changes to the genre selection
+   * @param {Object} event - The change event from the genre select component
+   */
   const genreChangeHandler = (event) => {
     const { value } = event.target;
     setBook({
       ...book,
-      genres: typeof value === 'string' ? value.split(',') : value,
+      genres: typeof value === "string" ? value.split(",") : value,
     });
   };
 
+  /**
+   * Handles changes to the star rating
+   * @param {Object} event - The change event from the rating component
+   */
   const rateChangeHandler = (event) => {
     const { value } = event.target;
     setBook({
@@ -42,17 +55,25 @@ function AddBook() {
     });
   };
 
+  /**
+   * Updates book state based on form input changes
+   * @param {Object} e - The change event from form inputs
+   */
   const addBookHandler = (e) => {
     const { name, value, checked, type } = e.target;
-    if (type === 'checkbox' && name === 'completed') {
+    if (type === "checkbox" && name === "completed") {
       setBook({ ...book, [name]: checked });
     } else {
       setBook({ ...book, [name]: value });
     }
   };
 
+  /**
+   * Submits the book data to the server
+   * Uses the post method from useAxios hook
+   */
   function postHandler() {
-    post('books', book);
+    post("books", book);
   }
 
   return (
@@ -60,7 +81,7 @@ function AddBook() {
       <Stack
         spacing={1}
         alignItems="stretch"
-        sx={{ my: 2, mx: 'auto', width: '25%' }}
+        sx={{ my: 2, mx: "auto", width: "25%" }}
       >
         {alert.show && <Alert severity={alert.type}>{alert.message}</Alert>}
         <Typography variant="h4" component="h2" sx={{ my: 10 }}>
