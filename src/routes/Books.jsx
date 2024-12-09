@@ -13,6 +13,11 @@ import {
 import { useEffect } from "react";
 import useAxios from "../services/useAxios";
 
+/**
+ * Books component displays a grid of book cards
+ * Shows book information including cover image, title, author, and rating
+ * @returns {JSX.Element} A responsive grid of book cards
+ */
 function Books() {
   const apiURL = "http://localhost:3000";
   const { data, alert, loading, get } = useAxios(apiURL);
@@ -23,7 +28,12 @@ function Books() {
     }
   }, []);
 
-  // TODO: Replace axios with useAxios hook
+  /**
+   * Fetches books data from the server
+   * @async
+   * @throws {Error} When the API request fails
+   */
+
   async function getBooks() {
     try {
       await get("books");
