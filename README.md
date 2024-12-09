@@ -68,3 +68,5 @@ Fork this project and solve the tickets one by one by creating a branch for each
     Use Material-UI to style the `SinglePage` component, ensuring it aligns with the application's existing design.
 
 Added some text
+
+Added some more text
