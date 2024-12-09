@@ -1,36 +1,46 @@
-import { useState } from 'react';
-import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
-import Rating from '@mui/material/Rating';
-import Button from '@mui/material/Button';
-import OutlinedInput from '@mui/material/OutlinedInput';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import Alert from '@mui/material/Alert';
-import { DateField } from '@mui/x-date-pickers/DateField';
-import useAxios from '../services/useAxios';
-import { bookGenres } from '../genres';
-import { Stack, Typography } from '@mui/material';
+import { Star } from "@mui/icons-material";
+import { Box, Stack, Typography } from "@mui/material";
+import Alert from "@mui/material/Alert";
+import Button from "@mui/material/Button";
+import Checkbox from "@mui/material/Checkbox";
+import FormControlLabel from "@mui/material/FormControlLabel";
+import MenuItem from "@mui/material/MenuItem";
+import OutlinedInput from "@mui/material/OutlinedInput";
+import Rating from "@mui/material/Rating";
+import Select from "@mui/material/Select";
+import TextField from "@mui/material/TextField";
+import { DateField } from "@mui/x-date-pickers/DateField";
+import { useState } from "react";
+import { bookGenres } from "../genres";
+import useAxios from "../services/useAxios";
 
 function AddBook() {
-  const { alert, post } = useAxios('http://localhost:3001');
+  const { alert, post } = useAxios("http://localhost:3001");
   const [rateValue, setRateValue] = useState(3);
   const [book, setBook] = useState({
-    author: '',
-    name: '',
+    author: "",
+    name: "",
     genres: [],
     completed: false,
     start: null,
     end: null,
     stars: null,
   });
+  const [hover, setHover] = useState(-1);
+  const labels = {
+    0: "0",
+    1: "1+",
+    2: "2+",
+    3: "3",
+    4: "4",
+    5: "5",
+  };
 
   const genreChangeHandler = (event) => {
     const { value } = event.target;
     setBook({
       ...book,
-      genres: typeof value === 'string' ? value.split(',') : value,
+      genres: typeof value === "string" ? value.split(",") : value,
     });
   };
 
@@ -44,7 +54,7 @@ function AddBook() {
 
   const addBookHandler = (e) => {
     const { name, value, checked, type } = e.target;
-    if (type === 'checkbox' && name === 'completed') {
+    if (type === "checkbox" && name === "completed") {
       setBook({ ...book, [name]: checked });
     } else {
       setBook({ ...book, [name]: value });
@@ -52,7 +62,7 @@ function AddBook() {
   };
 
   function postHandler() {
-    post('books', book);
+    post("books", book);
   }
 
   return (
@@ -60,7 +70,7 @@ function AddBook() {
       <Stack
         spacing={1}
         alignItems="stretch"
-        sx={{ my: 2, mx: 'auto', width: '25%' }}
+        sx={{ my: 2, mx: "auto", width: "25%" }}
       >
         {alert.show && <Alert severity={alert.type}>{alert.message}</Alert>}
         <Typography variant="h4" component="h2" sx={{ my: 10 }}>
@@ -117,7 +127,17 @@ function AddBook() {
             onChange={(event, newValue) => {
               setRateValue(newValue);
             }}
-          />
+            onChangeActive={(event, newHover) => {
+              setHover(newHover);
+            }}
+            emptyIcon={<Star style={{ opacity: 0.55 }} fontSize="inherit" />}
+          >
+            {rateValue !== null && (
+              <Box sx={{ ml: 2 }}>
+                {labels[hover !== -1 ? hover : rateValue]}
+              </Box>
+            )}
+          </Rating>
         </Stack>
         <Button variant="contained" type="submit">
           Add new
