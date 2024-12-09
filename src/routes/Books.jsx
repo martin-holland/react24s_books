@@ -1,17 +1,17 @@
-import { useEffect, useState } from 'react';
-import axios from 'axios';
 import {
   Box,
+  Button,
   Card,
   CardActions,
   CardMedia,
-  Button,
-  CircularProgress,
-  Stack,
-  Rating,
   Chip,
+  CircularProgress,
+  Rating,
+  Stack,
   Typography,
-} from '@mui/material';
+} from "@mui/material";
+import axios from "axios";
+import { useEffect, useState } from "react";
 
 function Books() {
   const [books, setBooks] = useState([]);
@@ -23,10 +23,9 @@ function Books() {
     }
   }, []);
 
-  // TODO: Replace axios with useAxios hook
   async function getBooks() {
     try {
-      const response = await axios.get('http://localhost:3000/books');
+      const response = await axios.get("http://localhost:3000/books");
       setBooks(response.data);
       setIsLoading(false);
     } catch (error) {
@@ -36,12 +35,12 @@ function Books() {
 
   // TODO: Implement search functionality
   return (
-    <Box sx={{ mx: 'auto', p: 2 }}>
+    <Box sx={{ mx: "auto", p: 2 }}>
       {isLoading && <CircularProgress />}
       {!isLoading && (
         <div>
           <Stack
-            sx={{ justifyContent: 'space-around' }}
+            sx={{ justifyContent: "space-around" }}
             spacing={{ xs: 1 }}
             direction="row"
             useFlexGap
@@ -50,9 +49,9 @@ function Books() {
             {books.map((book) => (
               <Card
                 sx={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  width: '15%',
+                  display: "flex",
+                  flexDirection: "column",
+                  width: "15%",
                   minWidth: 200,
                 }}
                 key={book.name}
@@ -80,8 +79,8 @@ function Books() {
                 </Box>
                 <CardActions
                   sx={{
-                    justifyContent: 'space-between',
-                    mt: 'auto',
+                    justifyContent: "space-between",
+                    mt: "auto",
                     pl: 2,
                   }}
                 >
