@@ -159,7 +159,7 @@ function Books() {
                 >
                   <Rating
                     name="read-only"
-                    value={book.stars}
+                    value={parseInt(book.stars, 10)}
                     readOnly
                     size="small"
                   />
