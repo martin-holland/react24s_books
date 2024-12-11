@@ -20,7 +20,6 @@ import useAxios from "../services/useAxios";
  */
 function AddBook() {
   const { alert, post } = useAxios("http://localhost:3000");
-  const [rateValue, setRateValue] = useState(3);
   const messageTimeoutRef = useRef(null);
   const [book, setBook] = useState({
     author: "",
@@ -41,18 +40,6 @@ function AddBook() {
     setBook({
       ...book,
       genres: typeof value === "string" ? value.split(",") : value,
-    });
-  };
-
-  /**
-   * Handles changes to the star rating
-   * @param {Object} event - The change event from the rating component
-   */
-  const rateChangeHandler = (event) => {
-    const { value } = event.target;
-    setBook({
-      ...book,
-      stars: value,
     });
   };
 
@@ -164,19 +151,18 @@ function AddBook() {
         >
           <Rating
             name="stars"
-            value={rateValue}
+            value={book.stars}
             precision={1}
             size="large"
             onChange={(event, newValue) => {
-              setRateValue(newValue);
-              setBook({ ...book, stars: newValue });
-            }}
-            onChangeActive={(event, newHover) => {
-              setBook({ ...book, stars: newHover });
+              setBook((prev) => ({
+                ...prev,
+                stars: newValue,
+              }));
             }}
           />
           <Typography variant="body2" color="text.secondary">
-            {rateValue !== null ? `${rateValue} stars` : "Hover to rate"}
+            {book.stars !== null ? `${book.stars} stars` : "Hover to rate"}
           </Typography>
         </Stack>
         <Button variant="contained" type="submit">
