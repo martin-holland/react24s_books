@@ -8,9 +8,10 @@ import {
   CircularProgress,
   Rating,
   Stack,
+  TextField,
   Typography,
 } from "@mui/material";
-import { useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import useAxios from "../services/useAxios";
 
 /**
@@ -21,12 +22,29 @@ import useAxios from "../services/useAxios";
 function Books() {
   const apiURL = "http://localhost:3000";
   const { data, alert, loading, get } = useAxios(apiURL);
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     if (data.length === 0) {
       getBooks();
     }
   }, []);
+
+  const filteredBooks = useMemo(() => {
+    const searchTerm = search.toLowerCase().trim();
+
+    if (!searchTerm) return data; // Return all books if search is empty
+
+    return data.filter((book) => {
+      const matchesTitle = book.name.toLowerCase().includes(searchTerm);
+      const matchesAuthor = book.author.toLowerCase().includes(searchTerm);
+      const matchesGenre = book.genres.some((genre) =>
+        genre.toLowerCase().includes(searchTerm)
+      );
+
+      return matchesTitle || matchesAuthor || matchesGenre;
+    });
+  }, [data, search]);
 
   /**
    * Fetches books data from the server
@@ -54,8 +72,22 @@ function Books() {
             direction="row"
             useFlexGap
             flexWrap="wrap"
+            mb={2}
           >
-            {data?.map((book) => (
+            <TextField
+              label="Search"
+              value={search}
+              onChange={(e) => setSearch(e.target.value)}
+            />
+          </Stack>
+          <Stack
+            sx={{ justifyContent: "space-around" }}
+            spacing={{ xs: 1 }}
+            direction="row"
+            useFlexGap
+            flexWrap="wrap"
+          >
+            {filteredBooks?.map((book) => (
               <Card
                 sx={{
                   display: "flex",
