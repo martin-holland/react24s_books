@@ -9,7 +9,7 @@ import Rating from "@mui/material/Rating";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { bookGenres } from "../genres";
 import useAxios from "../services/useAxios";
 
@@ -19,8 +19,8 @@ import useAxios from "../services/useAxios";
  * @returns {JSX.Element} A form for adding new books
  */
 function AddBook() {
-  const { alert, post } = useAxios("http://localhost:3001");
-  const [rateValue, setRateValue] = useState(3);
+  const { alert, post } = useAxios("http://localhost:3000");
+  const messageTimeoutRef = useRef(null);
   const [book, setBook] = useState({
     author: "",
     name: "",
@@ -44,18 +44,6 @@ function AddBook() {
   };
 
   /**
-   * Handles changes to the star rating
-   * @param {Object} event - The change event from the rating component
-   */
-  const rateChangeHandler = (event) => {
-    const { value } = event.target;
-    setBook({
-      ...book,
-      stars: value,
-    });
-  };
-
-  /**
    * Updates book state based on form input changes
    * @param {Object} e - The change event from form inputs
    */
@@ -72,9 +60,25 @@ function AddBook() {
    * Submits the book data to the server
    * Uses the post method from useAxios hook
    */
-  function postHandler() {
+  function postHandler(e) {
+    e.preventDefault();
+
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+    }
+
     post("books", book);
+
+    messageTimeoutRef.current = setTimeout(() => {}, 5000);
   }
+
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <form onChange={addBookHandler} onSubmit={postHandler}>
@@ -147,19 +151,18 @@ function AddBook() {
         >
           <Rating
             name="stars"
-            value={rateValue}
+            value={book.stars}
             precision={1}
             size="large"
             onChange={(event, newValue) => {
-              setRateValue(newValue);
-              setBook({ ...book, stars: newValue });
-            }}
-            onChangeActive={(event, newHover) => {
-              setBook({ ...book, stars: newHover });
+              setBook((prev) => ({
+                ...prev,
+                stars: newValue,
+              }));
             }}
           />
           <Typography variant="body2" color="text.secondary">
-            {rateValue !== null ? `${rateValue} stars` : "Hover to rate"}
+            {book.stars !== null ? `${book.stars} stars` : "Hover to rate"}
           </Typography>
         </Stack>
         <Button variant="contained" type="submit">
