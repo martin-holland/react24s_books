@@ -13,6 +13,7 @@ import {
   Typography,
 } from "@mui/material";
 import { useEffect, useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import useAxios from "../services/useAxios";
 
 /**
@@ -98,36 +99,41 @@ function Books() {
                 }}
                 key={book.name}
               >
-                {book.img ? (
-                  <Box
-                    sx={{
-                      height: 250,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      overflow: "hidden", // Ensure proper cropping
-                    }}
-                  >
-                    <CardMedia
-                      component="img"
-                      sx={{ height: "100%", objectFit: "contain" }}
-                      image={book.img}
-                      title={book.name}
-                    />
-                  </Box>
-                ) : (
-                  <Box
-                    sx={{
-                      height: 250,
-                      display: "flex",
-                      alignItems: "center",
-                      justifyContent: "center",
-                      bgcolor: "grey.200", // Optional for background styling
-                    }}
-                  >
-                    <AutoStoriesIcon sx={{ fontSize: 100 }} />
-                  </Box>
-                )}
+                <Link
+                  to={`/books/${book.id}`}
+                  style={{ textDecoration: "none" }}
+                >
+                  {book.img ? (
+                    <Box
+                      sx={{
+                        height: 250,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        overflow: "hidden", // Ensure proper cropping
+                      }}
+                    >
+                      <CardMedia
+                        component="img"
+                        sx={{ height: "100%", objectFit: "contain" }}
+                        image={book.img}
+                        title={book.name}
+                      />
+                    </Box>
+                  ) : (
+                    <Box
+                      sx={{
+                        height: 250,
+                        display: "flex",
+                        alignItems: "center",
+                        justifyContent: "center",
+                        bgcolor: "grey.200", // Optional for background styling
+                      }}
+                    >
+                      <AutoStoriesIcon sx={{ fontSize: 100 }} />
+                    </Box>
+                  )}
+                </Link>
                 <Box sx={{ pt: 2, pl: 2 }}>
                   {book.genres.map((genre, i) => (
                     <Chip
