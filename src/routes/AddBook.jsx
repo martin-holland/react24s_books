@@ -129,7 +129,22 @@ function AddBook() {
 
         <DateField name="start" label="Started" />
         <DateField name="end" label="Finished" disabled={!book.completed} />
-        <Stack spacing={1}>
+        <Stack
+          spacing={1}
+          sx={{
+            alignItems: "center",
+            "& .MuiRating-root": {
+              padding: "10px", // Add padding around the stars
+              "& .MuiRating-icon": {
+                padding: "3px", // Add spacing between stars
+                cursor: "pointer",
+              },
+              "& .MuiRating-iconEmpty": {
+                color: "rgba(0,0,0,0.2)", // Make empty stars more visible
+              },
+            },
+          }}
+        >
           <Rating
             name="stars"
             value={rateValue}
