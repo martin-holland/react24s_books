@@ -9,7 +9,7 @@ import Rating from "@mui/material/Rating";
 import Select from "@mui/material/Select";
 import TextField from "@mui/material/TextField";
 import { DateField } from "@mui/x-date-pickers/DateField";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { bookGenres } from "../genres";
 import useAxios from "../services/useAxios";
 
@@ -19,8 +19,9 @@ import useAxios from "../services/useAxios";
  * @returns {JSX.Element} A form for adding new books
  */
 function AddBook() {
-  const { alert, post } = useAxios("http://localhost:3001");
+  const { alert, post } = useAxios("http://localhost:3000");
   const [rateValue, setRateValue] = useState(3);
+  const messageTimeoutRef = useRef(null);
   const [book, setBook] = useState({
     author: "",
     name: "",
@@ -72,9 +73,25 @@ function AddBook() {
    * Submits the book data to the server
    * Uses the post method from useAxios hook
    */
-  function postHandler() {
+  function postHandler(e) {
+    e.preventDefault();
+
+    if (messageTimeoutRef.current) {
+      clearTimeout(messageTimeoutRef.current);
+    }
+
     post("books", book);
+
+    messageTimeoutRef.current = setTimeout(() => {}, 5000);
   }
+
+  useEffect(() => {
+    return () => {
+      if (messageTimeoutRef.current) {
+        clearTimeout(messageTimeoutRef.current);
+      }
+    };
+  }, []);
 
   return (
     <form onChange={addBookHandler} onSubmit={postHandler}>
