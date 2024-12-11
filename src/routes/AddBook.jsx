@@ -133,12 +133,19 @@ function AddBook() {
           <Rating
             name="stars"
             value={rateValue}
-            onClick={rateChangeHandler}
+            precision={1}
             size="large"
             onChange={(event, newValue) => {
               setRateValue(newValue);
+              setBook({ ...book, stars: newValue });
+            }}
+            onChangeActive={(event, newHover) => {
+              setBook({ ...book, stars: newHover });
             }}
           />
+          <Typography variant="body2" color="text.secondary">
+            {rateValue !== null ? `${rateValue} stars` : "Hover to rate"}
+          </Typography>
         </Stack>
         <Button variant="contained" type="submit">
           Add new
