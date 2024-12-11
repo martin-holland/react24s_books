@@ -10,8 +10,8 @@ import {
   Stack,
   Typography,
 } from "@mui/material";
-import axios from "axios";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
+import useAxios from "../services/useAxios";
 
 /**
  * Books component displays a grid of book cards
@@ -19,11 +19,11 @@ import { useEffect, useState } from "react";
  * @returns {JSX.Element} A responsive grid of book cards
  */
 function Books() {
-  const [books, setBooks] = useState([]);
-  const [isLoading, setIsLoading] = useState(true);
+  const apiURL = "http://localhost:3000";
+  const { data, alert, loading, get } = useAxios(apiURL);
 
   useEffect(() => {
-    if (books.length === 0) {
+    if (data.length === 0) {
       getBooks();
     }
   }, []);
@@ -36,9 +36,7 @@ function Books() {
 
   async function getBooks() {
     try {
-      const response = await axios.get("http://localhost:3000/books");
-      setBooks(response.data);
-      setIsLoading(false);
+      await get("books");
     } catch (error) {
       console.error(error);
     }
@@ -47,8 +45,8 @@ function Books() {
   // TODO: Implement search functionality
   return (
     <Box sx={{ mx: "auto", p: 2 }}>
-      {isLoading && <CircularProgress />}
-      {!isLoading && (
+      {loading && <CircularProgress />}
+      {!loading && (
         <div>
           <Stack
             sx={{ justifyContent: "space-around" }}
@@ -57,7 +55,7 @@ function Books() {
             useFlexGap
             flexWrap="wrap"
           >
-            {books.map((book) => (
+            {data?.map((book) => (
               <Card
                 sx={{
                   display: "flex",

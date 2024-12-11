@@ -8,7 +8,7 @@ import { useState } from "react";
  * @returns {Object} Object containing request methods and state
  */
 const useAxios = (baseUrl) => {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState([]);
   const [alert, setAlert] = useState({ show: false, message: "", type: "" });
   const [loading, setLoading] = useState(false);
 
